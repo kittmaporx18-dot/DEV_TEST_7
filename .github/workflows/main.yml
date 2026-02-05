@@ -2,34 +2,36 @@ name: Android CI/CD
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ["main", "master"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4 # อัปเดตเป็น v4
+      - uses: actions/checkout@v4 # อัปเดตเป็น v4
 
-    - name: set up JDK 17 # แนะนำ JDK 17 สำหรับ Flutter เวอร์ชันใหม่
-      uses: actions/setup-java@v4 # อัปเดตเป็น v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: set up JDK 17 # แนะนำ JDK 17 สำหรับ Flutter เวอร์ชันใหม่
+        uses: actions/setup-java@v4 # อัปเดตเป็น v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
 
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.19.0' # ปรับตามเวอร์ชันที่คุณใช้งานจริง
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          # เปลี่ยนจาก 3.19.0 เป็น 3.19.3 หรือตามที่ระบบแนะนำ
+          flutter-version: "3.19.3"
+          channel: "stable"
 
-    - name: Install dependencies
-      run: flutter pub get
+      - name: Install dependencies
+        run: flutter pub get
 
-    - name: Build APK
-      run: flutter build apk --release
+      - name: Build APK
+        run: flutter build apk --release
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4 # ต้องเป็น v4 เท่านั้นถึงจะผ่านค่ะ!
-      with:
-        name: my-app-apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4 # ต้องเป็น v4 เท่านั้นถึงจะผ่านค่ะ!
+        with:
+          name: my-app-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
