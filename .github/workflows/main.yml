@@ -2,35 +2,34 @@ name: Android CI/CD
 
 on:
   push:
-    branches: [ "main", "master" ] # นี่คือจุดที่หายไปค่ะ ต้องบอก GitHub ว่าให้ทำงานเมื่อมีการ Push
+    branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4 # อัปเดตเป็น v4
 
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
+    - name: set up JDK 17 # แนะนำ JDK 17 สำหรับ Flutter เวอร์ชันใหม่
+      uses: actions/setup-java@v4 # อัปเดตเป็น v4
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.38.5' # ใช้เวอร์ชันเดียวกับในเครื่องคุณ
+        flutter-version: '3.19.0' # ปรับตามเวอร์ชันที่คุณใช้งานจริง
 
     - name: Install dependencies
       run: flutter pub get
 
     - name: Build APK
-      run: flutter build apk --release # คำสั่งบิลด์แอปจริง
+      run: flutter build apk --release
 
-    # ขั้นตอนสำคัญ: สั่งให้ GitHub เก็บไฟล์ไว้ให้เราโหลด (Upload Artifact)
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4 # ต้องเป็น v4 เท่านั้นถึงจะผ่านค่ะ!
       with:
         name: my-app-apk
         path: build/app/outputs/flutter-apk/app-release.apk
